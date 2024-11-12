@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Futuristic Timer App</title>
+  <style>
+    /* Basic styling */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Arial', sans-serif;
+      color: #ffffff;
+      transition: background 0.5s;
+      background-color: #282c34;
+    }
+
+    .banner-ad {
+      width: 100%;
+      height: 60px;
+      background: #4fc3f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      font-size: 1em;
+      text-align: center;
+      box-shadow: 0px 0px 8px rgba(79, 195, 247, 0.8);
+      margin-bottom: 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 2em;
+      color: #90caf9;
+      text-shadow: 0px 0px 10px rgba(144, 202, 249, 0.8);
+      margin-bottom: 20px;
+    }
+
+    .small-timer {
+      font-size: 1.2em;
+      color: #90caf9;
+      margin-bottom: 4px;
+    }
+
+    .timer-controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 15px 0;
+    }
+
+    input[type="number"] {
+      width: 60px;
+      padding: 10px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      outline: none;
+      box-shadow: inset 0px 0px 5px rgba(255, 255, 255, 0.1);
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 1em;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+      background-color: #0277bd;
+      color: #ffffff;
+      text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    button:hover {
+      background-color: #039be5;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 4px 0 20px;
+    }
+
+    .progress {
+      height: 100%;
+      width: 0;
+      background-color: #4fc3f7;
+      transition: width 0.3s;
+      box-shadow: 0px 0px 8px rgba(79, 195, 247, 0.8);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      width: 300px;
+      background: #333;
+      border-radius: 12px;
+      box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5);
+      text-align: center;
+    }
+    
+    .modal h2 {
+      color: #ffffff;
+      font-size: 1.5em;
+      margin-bottom: 10px;
+    }
+    
+    .modal p {
+      color: #cccccc;
+      font-size: 1em;
+      margin-bottom: 20px;
+    }
+    
+    .close-btn {
+      padding: 8px 16px;
+      background-color: #4fc3f7;
+      border: none;
+      border-radius: 8px;
+      color: #ffffff;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    
+    .close-btn:hover {
+      background-color: #039be5;
+    }
+
+    .theme-select {
+      margin: 15px 0;
+    }
+
+    /* Style for select theme inside About Us modal */
+    #themeSelect {
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255, 255, 255, 0.2); /* Semi-transparent background */
+  color: #ffffff; /* White text color */
+  cursor: pointer;
+  font-size: 1em;
+  box-shadow: inset 0px 0px 5px rgba(255, 255, 255, 0.1);
+}
+
+#themeSelect option {
+  background: rgba(255, 255, 255, 0.2); /* Same semi-transparent background */
+  color: #ffffff; /* White text color for options */
+}
+
+    /* Theme styles */
+    .theme1 {
+      background-color: #1e1e1e;
+      color: #f5f5f5;
+    }
+
+    .theme2 {
+      background-color: #ff7043; /* Warm Theme */
+      color: #ffffff;
+    }
+
+    .theme3 {
+      background-color: #69f0ae; /* Mint Green Theme */
+      color: #ffffff;
+    }
+
+    .theme4 {
+      background-color: #e1bee7; /* Soft Purple Theme */
+      color: #4a148c;
+    }
+
+    .theme5 {
+      background-color: #ffe082; /* Light Yellow Theme */
+      color: #3e2723;
+    }
+
+    .calmBlue {
+      background-color: #add8e6; /* Calm Blue Theme */
+      color: #144CFB;
+    }
+
+    .Superred {
+      background-color: #E13838; /* Calm Green Theme */
+      color: #600000;
+    }
+
+    .default {
+      background-color: #282c34;
+      color: #ffffff;
+    }
+
+    .main-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .enter-button {
+      margin-top: 20px;
+      padding: 15px 30px;
+      background-color: #4fc3f7;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.5em;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .enter-button:hover {
+      background-color: #03a9f4;
+    }
+    /* Style for Audio Select Dropdown */
+    #audioSelect {
+      padding: 8px;
+      border-radius: 8px;
+      border: none;
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      cursor: pointer;
+      font-size: 1em;
+      box-shadow: inset 0px 0px 5px rgba(255, 255, 255, 0.1);
+      transition: background 0.3s, color 0.3s;
+    }
+  /* Enter Button Styling */
+  #enterButton {
+    padding: 15px 30px;
+    font-size: 1.2em;
+    color: #fff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-family: Arial, sans-serif;
+  }
+  
+  #enterButton:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+  }
+  
+  #enterButton:active {
+    background-color: #388e3c;
+    transform: scale(0.95);
+  }
+  
+  /* Full-Screen Loading Overlay */
+  #loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.5em;
+    z-index: 1000;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Spinner Style */
+  .spinner {
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #4CAF50;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* Default text style for the Timer App title */
+  .app-title {
+    font-family: Arial, sans-serif;
+    font-size: 24px;
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;#525050
+  }
+
+  #exitModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  #exitModal .modal-content {
+    color:black;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  #exitModal button {
+    margin: 5px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  #exitModal button:first-of-type {
+    background-color: #ff5555; /* Exit button color */
+    color: white;
+  }
+  
+  #exitModal button:last-of-type {
+    background-color: #5555ff; /* Stay button color */
+    color: white;
+  }
+
+
+  </style>
+</head>
+<body class="default">
+
+<!-- Main Page -->
+<div id="mainPage" style="display: block; text-align: center;">
+  <h1 style="font-family: Arial, sans-serif; font-size: 2.5em; color: #525050;">Prime Timer</h1>
+  <button id="enterButton" onclick="showInterstitialAdAndEnter()">Enter</button>
+</div>
+
+<!-- Full-Screen Loading Overlay (hidden initially) -->
+<div id="loader" style="display: none;">
+  <div class="spinner"></div>
+  <p>Loading...</p>
+</div>
+
+<!-- Timer Page -->
+<div class="container" id="timerPage" style="display: none;">
+  <div class="banner-ad">
+    Nothing to show here
+  </div>
+  
+  <h1>Prime-Timer</h1>
+  
+  <!-- Timer Display -->
+  <div class="timer-display">
+    <h2 id="timeDisplay">00:00:00</h2>
+  </div>
+
+  <!-- Small Timer Display -->
+  <div class="small-timer" id="smallTimeDisplay">00:00:00</div>
+
+  <!-- Timer Controls -->
+  <div class="timer-controls">
+    <label>Hrs: <input type="number" id="hours" min="0" max="23" value="0"></label>
+    <label>Mins: <input type="number" id="minutes" min="0" max="59" value="0"></label>
+    <label>Secs: <input type="number" id="seconds" min="0" max="59" value="0"></label>
+  </div>
+
+  <!-- Control Buttons -->
+  <div class="timer-controls">
+    <button onclick="startTimer()">Start</button>
+    <button id="pauseResumeButton" onclick="pauseOrResumeTimer()">Pause</button>
+    <button onclick="resetTimer()">Reset</button>
+  </div>
+
+  <!-- Main Progress Bar -->
+  <div class="progress-bar">
+    <div class="progress" id="progress"></div>
+  </div>
+
+  <!-- About Us Button -->
+  <button onclick="openAboutUs()">About Us</button>
+</div>
+
+<!-- About Us Modal -->
+<div class="modal" id="aboutUsModal">
+  <h2>About Us</h2>
+  <p>This Prime-Timer app is a futuristic timer app provides multiple themes, smooth controls, and an intuitive interface. Hope You Like it! </p>
+  <h3 style="color:grey;">Version: 1.0</h3>
+  <strong style="color: white; margin-right: 157px; ">Options/Controls: </strong><br>
+  <label for="themeSelect" style="color: white;">Select Theme:</label>
+  <select id="themeSelect" class="theme-select" onchange="changeTheme(this.value)">
+    <option value="default">Default</option>
+    <option value="theme1">Dark</option>
+   <!-- <option value="theme2">camp Orange</option>
+    <option value="theme3">Calm Green</option> -->
+    <option value="theme4">Soft Purple</option>
+    <option value="theme5">Light Yellow</option>
+    <!--<option value="calmBlue">Calm Blue</option>
+    <option value="Superred">Super Red</option>-->
+  </select>
+  <label for="audioSelect" style="color: white;">Times'up Sound:</label>
+  <select id="audioSelect" onchange="previewAndSaveAudio(this.value)">
+    <option value="none">None</option>
+    <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3">Melodic</option>
+    <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3">Classical</option>
+    <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3">Beep</option>
+  </select><br>
+
+  <button class="close-btn" onclick="closeModal('aboutUsModal')">Close</button>
+</div>
+
+<!-- Time Up Modal -->
+<div id="timeUpModal" class="modal" style="display: none;">
+  <h2>Time's Up!</h2>
+  <p>Your timer has completed.</p>
+  <button onclick="closeModal('timeUpModal')">OK</button>
+</div>
+
+<!-- Exit Confirmation Modal -->
+<div id="exitModal">
+  <div class="modal-content">
+    <h3>Confirm Exit</h3>
+    <p>Are you sure you want to exit the app?</p>
+    <button onclick="quitApp()">Yes, Exit</button>
+    <button onclick="closeModal('exitModal')">No, Stay</button>
+  </div>
+</div>
+
+
+
+
+
+<script>
+  let timeRemaining = 0;
+  let timerInterval = null;
+  let isPaused = false;
+  let initialTime = 0;
+  let timeUpShown = false;
+
+// Load theme on page load
+  window.onload = function() {
+    const savedTheme = localStorage.getItem('selectedTheme') || 'default';
+    document.body.className = savedTheme;
+    document.getElementById('themeSelect').value = savedTheme;
+    document.getElementById('mainPage').style.display = "flex"; // Show main page on load
+    document.getElementById('timerPage').style.display = "none"; // Hide timer page initially
+  };
+  function saveTheme(theme) {
+  document.body.className = theme; // Apply theme to body
+  localStorage.setItem('selectedTheme', theme); // Save theme in local storage
+}
+
+  // Function to load the saved theme on page load
+  function loadSavedTheme() {
+    const savedTheme = localStorage.getItem('selectedTheme') || "defaultTheme"; // Default theme if none is saved
+    document.body.className = savedTheme; // Apply the saved theme
+    document.getElementById("themeSelect").value = savedTheme; // Set the dropdown to saved theme
+  }
+
+  function enterTimerPage() {
+    document.getElementById('mainPage').style.display = "none"; // Hide main page
+    document.getElementById('timerPage').style.display = "block"; // Show timer page
+  }
+
+  function startTimer() {
+    const hours = parseInt(document.getElementById('hours').value) || 0;
+    const minutes = parseInt(document.getElementById('minutes').value) || 0;
+    const seconds = parseInt(document.getElementById('seconds').value) || 0;
+
+    initialTime = timeRemaining = (hours * 3600) + (minutes * 60) + seconds;
+
+    if (timeRemaining > 0) {
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        if (!isPaused) {
+          timeRemaining--;
+          updateDisplay();
+          updateProgress();
+
+          if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            showTimeUpModal();
+          }
+        }
+      }, 1000);
+    }
+  }
+// Function to preview and save the selected audio
+  function previewAndSaveAudio(audioFile) {
+    if (audioFile !== "none") {
+      const audioPreview = new Audio(audioFile);
+      audioPreview.play(); // Play audio for preview
+  
+      // Stop the audio after 2 seconds
+      setTimeout(() => {
+        audioPreview.pause();
+        audioPreview.currentTime = 0; // Reset audio to the start
+      }, 2000); // 2000 milliseconds = 2 seconds
+    }
+  
+    // Save selected audio in local storage
+    localStorage.setItem('selectedAudio', audioFile);
+  }
+  
+  // Function to load saved audio option on page load
+  function loadSavedAudioOption() {
+    const savedAudio = localStorage.getItem('selectedAudio') || "none"; // Default to "None" if none is saved
+  document.getElementById("audioSelect").value = savedAudio;
+}
+  // Function to play the saved audio on time up
+  function playSelectedAudio() {
+    const selectedAudioFile = localStorage.getItem('selectedAudio') || 'i.mp3'; // Default if none selected
+    const audioElement = new Audio(selectedAudioFile);
+    audioElement.play();
+  }
+  
+  let timeUpAudio; // Declare variable to store the audio object
+
+
+  // Function to show the time's up modal and play the selected audio
+function showTimeUpModal() {
+  const selectedAudioFile = localStorage.getItem('selectedAudio') || 'i.mp3'; // Default audio if none selected
+  timeUpAudio = new Audio(selectedAudioFile);
+  timeUpAudio.loop = true; // Loop the audio until the modal is closed
+  timeUpAudio.play(); // Play the selected audio
+
+  // Display the time's up modal
+  document.getElementById("timeUpModal").style.display = "block";
+}
+
+
+  function pauseOrResumeTimer() {
+    isPaused = !isPaused;
+    const button = document.getElementById("pauseResumeButton");
+    button.textContent = isPaused ? "Resume" : "Pause";
+  }
+
+  function resetTimer() {
+    clearInterval(timerInterval);
+    timeRemaining = 0;
+    initialTime = 0;
+    isPaused = false;
+    document.getElementById("pauseResumeButton").textContent = "Pause";
+    updateDisplay();
+    updateProgress();
+    document.getElementById("progress").style.width = "0%"; // Reset progress bar
+    timeUpShown = false; // Allow time up modal to show again
+  }
+
+  function updateDisplay() {
+    const hours = Math.floor(timeRemaining / 3600);
+    const minutes = Math.floor((timeRemaining % 3600) / 60);
+    const seconds = timeRemaining % 60;
+    document.getElementById('timeDisplay').textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    document.getElementById('smallTimeDisplay').textContent = ` ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  }
+
+  function updateProgress() {
+    const progress = document.getElementById('progress');
+    progress.style.width = ((initialTime - timeRemaining) / initialTime * 100) + "%";
+  }
+
+  function openAboutUs() {
+    document.getElementById("aboutUsModal").style.display = "block";
+  }
+
+  // Function to close the modal and stop the audio
+  function closeModal(modalId) {
+    document.getElementById(modalId).style.display = "none";
+  
+    // Stop and reset the audio if the modal being closed is the time's up modal
+    if (modalId === 'timeUpModal' && timeUpAudio) {
+      timeUpAudio.pause(); // Stop audio
+      timeUpAudio.currentTime = 0; // Reset audio to start
+      timeUpAudio = null; // Clear the audio object
+    }
+  }
+
+  // Function to change theme
+  function changeTheme(theme) {
+    document.body.className = theme; // Change the body class to the selected theme
+    localStorage.setItem('selectedTheme', theme); // Save the selected theme
+    const select = document.getElementById('themeSelect');
+    select.value = theme; // Ensure the select reflects the saved theme
+  }
+  let showAdOptions = ['yes', 'no','yes']; // List to randomly determine if ad will show
+  
+  // Function to check if the user is online
+  function checkInternetConnection() {
+    return navigator.onLine; // Returns true if online, false if offline
+  }
+  
+  // Function to show an interstitial ad based on random choice and enter the timer page
+  function showInterstitialAdAndEnter() {
+    // Check for internet connection
+    if (!checkInternetConnection()) {
+      alert("Please connect to the internet to access ads.");
+      return; // Stop if there's no internet connection
+    }
+  
+    // Randomly select "yes" or "no" from the showAdOptions array
+    let showAd = showAdOptions[Math.floor(Math.random() * showAdOptions.length)];
+  
+    if (showAd === 'yes') {
+      alert("Press Ok to start"); // Simulate interstitial ad
+    }
+  
+    // Display the loader overlay before navigating to the timer page
+    document.getElementById("loader").style.display = "flex"; // Show full-screen loader
+    setTimeout(() => {
+      document.getElementById("mainPage").style.display = "none"; // Hide main page
+      document.getElementById("timerPage").style.display = "block"; // Show timer page
+      document.getElementById("loader").style.display = "none"; // Hide loader overlay
+    }, 3000);
+  }
+  
+  // Flag to track if the app just loaded
+  let appJustLoaded = true;
+  
+// Function to show the exit confirmation modal in the center
+  function showExitConfirmation() {
+    const exitModal = document.getElementById("exitModal");
+    exitModal.style.display = "flex"; // Ensure modal is displayed when called
+  }
+  
+  // Quit the app function (simulate with alert for web, replace with window.close() for mobile)
+  function quitApp() {
+    closeModal("exitModal");
+    if (window.confirm("Are you sure you want to exit?")) {
+      window.close(); // Replace with platform-specific quit command if needed
+    }
+  }
+  
+// Function to handle back button behavior
+  function handleBackButton() {
+    const aboutUsModal = document.getElementById("aboutUsModal");
+    const timerPage = document.getElementById("timerPage");
+    const mainPage = document.getElementById("mainPage");
+  
+    if (timerPage.style.display === "block") {
+      // If on the timer page, close any popup and return to main page without confirmation
+      if (aboutUsModal.style.display === "block") {
+        closeModal("aboutUsModal");
+      } else {
+        timerPage.style.display = "none";
+        mainPage.style.display = "block";
+      }
+    } else if (mainPage.style.display === "block") {
+      // If on the main page, show exit confirmation modal
+      showExitConfirmation();
+    }
+  }
+  
+
+// Initialize back button handling with delay to avoid triggering on initial load
+  function initializeBackButtonHandling() {
+    history.pushState(null, document.title, location.href);
+  
+    // Delay adding popstate event listener to avoid initial load trigger
+    setTimeout(() => {
+      window.addEventListener("popstate", (event) => {
+        handleBackButton();
+        history.pushState(null, document.title, location.href);
+      });
+    }, 100); // 100 ms delay
+  }
+  
+  // Call the initialization function when the app loads
+  initializeBackButtonHandling();
+  
+    
+    // Event listener for back button or Escape key
+    window.addEventListener("popstate", handleBackButton);
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") handleBackButton();
+    });
+    
+// Smooth quit function
+  function quitApp() {
+    closeModal("exitModal");
+    alert("Double Click on back button to Exit the app..."); // Replace this with actual exit command on mobile
+  
+    // Smooth exit for mobile environments
+    if (window.navigator.app && window.navigator.app.exitApp) {
+      window.navigator.app.exitApp(); // Cordova/PhoneGap
+    } else if (window.close) {
+      window.close(); // For web environment
+    } else {
+      console.log("Exit functionality not supported in this environment.");
+    }
+  }
+   
+  
+  // Call loadSavedAudioOption when the page loads
+window.onload = function() {
+  loadSavedAudioOption();
+  loadSavedTheme();
+};
+</script>
+</body>
+</html>
